@@ -41,4 +41,3 @@ However, in Java, `the task is entirely handled by the JVM` and performed by its
   3. Stack Area
   4. PC Register
   5. Native Method Stack Area
-- 
