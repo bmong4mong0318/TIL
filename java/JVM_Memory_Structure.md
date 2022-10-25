@@ -37,7 +37,35 @@ However, in Java, `the task is entirely handled by the JVM` and performed by its
 	It is largely divided into **5 categorie**s according to the use of memory.
   
   1. Method Area(Static Area)
+
+		It is a runtime constant pool of `classes` and `interfaces` read by the JVM.
+
+		`Static variables`, `constructors`, `methods`, and `member variables` that are components of a class are stored in this space.
+
   2. Heap Area
+
+		This is the space where the dynamically created object (object or instance created by the `new` operator) while the Java program is executed is stored. 
+		
+		Objects created here can be referenced by fields of other objects or by other methods existing on the stack.
+		
+		If the referenced variable disappears, this object is considered unnecessary and deallocated by the Garbage Collector.
+
   3. Stack Area
+
+		When a `method` is called, it is allocated in this area. The first to come in is the last to go out (FILO).
+		
+		When a thread is created, each thread is allocated one stack for each thread. `Local variables` generated when a method is executed are also stored in the stack.
+		
+		In the stack, objects in the heap area can be referenced, and primitive type variables are created directly on the stack (objects are in the heap area).
   4. PC Register
+
+		Contains the address of the currently executing JVM instruction. It can be said that the role of the CPU is similar to that of the PC.
+
   5. Native Method Stack Area
+
+		A stack for code in languages other than Java. It exists to execute code of other languages called through JNI (Java Native Interface).
+
+
+
+
+https://hyoje420.tistory.com/2
