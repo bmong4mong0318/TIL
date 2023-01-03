@@ -8,13 +8,13 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
+//@Service
 public class MemberService {
 
     private final MemberRepository memberRepository;
 
     // repository 를 직접 new 하는 것이 아니라 외부에서 넣어주도록 한다.
-    @Autowired
+//    @Autowired
     public MemberService(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
     }

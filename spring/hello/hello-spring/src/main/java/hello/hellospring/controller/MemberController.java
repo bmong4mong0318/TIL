@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 public class MemberController {
 
     private final MemberService memberService;
+//    @Autowired private  MemberService memberService; (필드 주입)
 
     // 생성자에 @Autowired 가 있으면 스프링 컨테이너에 있는 memberService 를 연결 시켜준다. (Dependency Injection)
     @Autowired
