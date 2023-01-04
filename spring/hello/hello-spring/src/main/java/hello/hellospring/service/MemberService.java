@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 //@Service
+@Transactional // jpa 를 쓸려면 데이터를 저장하거나 변경할 때 항상 필요하다
 public class MemberService {
 
     private final MemberRepository memberRepository;
