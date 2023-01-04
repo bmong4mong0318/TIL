@@ -2,8 +2,10 @@ package hello.hellospring.controller;
 
 import hello.hellospring.domain.Member;
 import hello.hellospring.service.MemberService;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -43,5 +45,14 @@ public class MemberController {
 
         return "redirect:/";
     }
+
+    @GetMapping("/members")
+    public String list(Model model){
+        List<Member> members = memberService.findMembers();
+        //key 는 "members"로, value 는 members 리스트로, 화면에 담아서 view 에다가 넘긴다.
+        model.addAttribute("members", members);
+        return "members/memberList";
+    }
+
 
 }
