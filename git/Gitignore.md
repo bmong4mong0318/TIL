@@ -1,5 +1,7 @@
 # .gitignore
 
+It should always exist in the `root` directory.
+
 Share code neatly, hide files that need to be hidden!
 ```
 ### Ignore all files ending in .exe
