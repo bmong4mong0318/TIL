@@ -1,20 +1,31 @@
 # SQL 스터디
 `혼자 공부하는 SQL`(한빛미디어) (2023.01.06~)
 
+## 목차
+- [SQL문](#sql-)
+- [데이터 형식](#------)
+- [market_db.sql](#market-dbsql)
+- [USE 문](#use--)
+- [SELECT 문](#select--)
+    * [기본 형식](#-----)
+    * [열 이름의 별칭(alias)](#---------alias-)
+    * [IN()](#in--)
+- [LIKE](#like)
 
-### SQL문
+## SQL문
 - CREATE: 테이블이나 데이터베이스를 만들 때 사용합니다.
 - UPDATE: 데이터를 수정할 때 사용합니다.
 - DELETE: 데이터를 삭제할 때 사용합니다.
 - SELECT: 데이터를 조회할 때 사용합니다.
 
 
-### 데이터 형식
+## 데이터 형식
 - INT: 소수점이 없는 정수형
 - CHAR: 문자형
 - DATE: 날짜형
 - NOT NULL: 비어있는 데이터를 허용하지 않습니다.
 
+## market_db.sql
 ```sql
 DROP DATABASE IF EXISTS market_db; -- 만약 market_db가 존재하면 우선 삭제한다.
 CREATE DATABASE market_db;
@@ -71,15 +82,15 @@ SELECT * FROM buy;
 
 ```
 
-### USE 문
+## USE 문
 현재 사용하는 데이터베이스를 변경한다.
 ```sql
 USE market_db;
 ```
 
-### SELECT 문
+## SELECT 문
 
-#### 기본 형식
+### 기본 형식
 ```sql
 SELECT select_expr -- 열_이름
      [FROM table_reference] -- 테이블_이름 
@@ -90,4 +101,54 @@ SELECT select_expr -- 열_이름
      [LIMIT {[offset,] row_count | row_count OFFSET offset}] -- 숫자
 ```
 
+데이터베이스 이름을 생략하면 USE 문으로 지정해 놓은 데이터베이스가 자동으로 선택됩니다. 
 
+다음 두 쿼리는 동일한 것입니다. 
+```sql
+USE market_db;
+SELECT * FROM member;
+```
+```sql
+SELECT * FROM market_db.member;
+```
+
+### 열 이름의 별칭(alias)
+열 이름 다음에 지정하고 싶은 별칭을 입력하면 됩니다. 별칭에 공백이 있으면 큰따옴표(")로 묶어줍니다.
+```sql
+SELECT addr 주소, debut_date "데뷔 일자", mem_name FROM member;
+```
+
+### IN()
+다음과 같이 문자로 표현되는 데이터는 어느 범위에 들어 있다고 표현할 수 없습니다.
+```sql
+SELECT mem_name, addr
+    FROM member
+    WHERE addr = '경기' OR addr = '전남' OR addr = '경남';
+```
+IN()을 사용하면 코드를 간결하게 작성가능합니다.
+```sql
+SELECT mem_name, addr
+    FROM member
+    WHERE addr IN('경기', '전남', '경남');
+```
+
+### LIKE
+문자열의 일부를 검색 할 수 있습니다.
+```sql
+SELECT *
+    FROM member
+    WHERE mem_name LIKE '우%'; -- 제일 앞 글자가 '우'이고 그 뒤는 무엇이든(%) 허용
+```
+한 글자와 매치하기 위해서는 언더바(_) 사용
+```sql
+SELECT *
+    FROM member
+    WHERE mem_name LIKE '__핑크'; -- 앞 두글자는 상관없고 뒤는 '핑크'인 회원을 검색
+```
+
+### 서브 쿼리
+SELECT 안에는 또 다른 SELECT 가 들어갈 수 있습니다.
+```sql
+SELECT mem_name, height FROM member
+    WHERE height > (SELECT height FROM member WHERE mem_name = '에이핑크');
+```
