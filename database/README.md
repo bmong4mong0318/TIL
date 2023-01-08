@@ -10,9 +10,16 @@
 - [USE 문](#use--)
 - [SELECT 문](#select--)
     * [기본 형식](#-----)
-    * [열 이름의 별칭(alias)](#---------alias-)
-    * [IN()](#in--)
-- [LIKE](#like)
+    * [FROM](#from)
+    * [WHERE](#where)
+        + [열 이름의 별칭(alias)](#---------alias-)
+        + [IN()](#in--)
+        + [LIKE](#like)
+    * [서브 쿼리](#-----)
+    * [ORDER BY](#order-by)
+    * [LIMIT](#limit)
+    * [DISTINCT](#distinct)
+
 
 ## SQL문
 - CREATE: 테이블이나 데이터베이스를 만들 때 사용합니다.
@@ -103,6 +110,7 @@ SELECT select_expr -- 열_이름
      [LIMIT {[offset,] row_count | row_count OFFSET offset}] -- 숫자
 ```
 
+### FROM
 데이터베이스 이름을 생략하면 USE 문으로 지정해 놓은 데이터베이스가 자동으로 선택됩니다. 
 
 다음 두 쿼리는 동일한 것입니다. 
@@ -113,14 +121,14 @@ SELECT * FROM member;
 ```sql
 SELECT * FROM market_db.member;
 ```
-
-### 열 이름의 별칭(alias)
+### WHERE
+#### 열 이름의 별칭(alias)
 열 이름 다음에 지정하고 싶은 별칭을 입력하면 됩니다. 별칭에 공백이 있으면 큰따옴표(")로 묶어줍니다.
 ```sql
 SELECT addr 주소, debut_date "데뷔 일자", mem_name FROM member;
 ```
 
-### IN()
+#### IN()
 다음과 같이 문자로 표현되는 데이터는 어느 범위에 들어 있다고 표현할 수 없습니다.
 ```sql
 SELECT mem_name, addr
@@ -134,7 +142,7 @@ SELECT mem_name, addr
     WHERE addr IN('경기', '전남', '경남');
 ```
 
-### LIKE
+#### LIKE
 문자열의 일부를 검색 할 수 있습니다.
 ```sql
 SELECT *
@@ -154,3 +162,44 @@ SELECT 안에는 또 다른 SELECT 가 들어갈 수 있습니다.
 SELECT mem_name, height FROM member
     WHERE height > (SELECT height FROM member WHERE mem_name = '에이핑크');
 ```
+
+### ORDER BY
+결과가 출력되는 순서를 조절합니다.
+```sql
+SELECT mem_id, mem_name, debut_date
+    FROM member
+    ORDER BY debut_date; -- 데위 일자가 빠른 순서대로 출력, ASC(Ascending)-기본값
+```
+
+```sql
+SELECT mem_id, mem_name, debut_date
+    FROM member
+    ORDER BY debut_date DESC; -- 데위 일자가 늦은 순서대로 출력, DESC(Descending)
+```
+
+```sql
+SELECT mem_id, mem_name, debut_date, height
+    FROM member
+    WHERE height >= 164
+    ORDER BY height DESC, debut_date ASC; -- 키가 큰 순서대로 정렬하되, 키가 같으면 데뷔일자가 빠른 순서로 정렬
+```
+
+### LIMIT
+출력하는 개수를 제한합니다.
+
+형식: LIMIT 시작, 개수 (LIMIT 3 == LIMIT 0, 3)
+```sql
+SELECT mem_name, debut_date
+    FROM member
+    ORDER BY debut_date
+    LIMIT 3; -- 3건만 출력
+```
+
+```sql
+SELECT mem_name, debut_date
+    FROM member
+    ORDER BY debut_date
+    LIMIT 3, 2; -- 3번째부터 2건만 조회
+```
+
+### DISTINCT
