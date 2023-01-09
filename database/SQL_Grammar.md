@@ -203,3 +203,29 @@ SELECT mem_name, debut_date
 ```
 
 ### DISTINCT
+중복된 데이터 1개만 남기고 제거합니다.
+```sql
+SELECT DISTINCT addr FROM member;
+```
+
+### GROUP BY 절
+그룹을 묶어주는 역할을 합니다.
+```sql
+SELECT mem_id, SUM(amount) FROM bouy GROUP BY mem_id;
+```
+SUM 외의 집계함수들
+- AVG() : 평균을 구합니다.
+- MIN() : 최소값을 구합니다.
+- MAX(): 최대값을 구합니다.
+- COUNT() : 행의 개수를 셉니다.
+- COUNT(DISTINCT) : 행의 개수를 셉니다. (중복은 1개만 인정)
+
+### Having 절
+WHERE 과 비슷한 개념으로 조건을 제한하는 것이지만, 집계 함수에 대해서 조건을 제한하는 것입니다.
+```sql
+SELECT  mem_id "회원 아이디", SUM(price*amount) "총 구매 금액"
+    FROM buy
+    GROUP BY mem_id
+    HAVING SUM(price*amount) > 1000 -- 집계 함수에 대해서 조건을 제한
+    ORDER BY SUM(price*amount) DESC;
+```
