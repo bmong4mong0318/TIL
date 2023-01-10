@@ -34,7 +34,9 @@ public static void main(String[] args) throws IOException {}
  Read한 데이터는 Line단위로만 나눠지기에 공백단위로 데이터를 가공하려면 따로 작업을 해주어야 합니다.
 1. StringTokenizer에 nextToken()함수를 쓰면 readLine()을 통해 입력받은 값을 공백단위로 구분하여 순서대로 호출할 수 있습니다.
 2. String.split()함수를 활용하여 배열에 공백단위로 끊어서 데이터를 넣고 사용할 수 있습니다.
+
 ## StringTokenizer
+
 ```java
 StringTokenizer st = new StringTokenizer(s); //StringTokenizer인자값에 입력 문자열 넣음
 
@@ -49,9 +51,10 @@ String array[] = s.split(" "); //공백마다 데이터 끊어서 배열에 넣�
 # Java Ouput
 
 ## BufferWriter
-BufferedWriter 의 경우 버퍼를 잡아 놓았기 때문에 반드시 flush() / close() 를 반드시 호출해 주어 뒤처리를 해주어야 합니다.
+`BufferedWriter` 의 경우 버퍼를 잡아 놓았기 때문에 반드시 `flush()` / `close()` 를 반드시 호출해 주어 뒤처리를 해주어야 합니다.
 
-bw.write에는 System.out.println();과 같이 자동개행기능이 없기때문에 개행을 해주어야할 경우에는 \n를 통해 따로 처리해주어야 합니다.
+`bw.write`에는 `System.out.println();`과 같이 자동개행기능이 없기때문에 개행을 해주어야할 경우에는 \n를 통해 따로 처리해주어야 합니다.
+
 ```java
 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));   //할당된 버퍼에 값 넣어주기
 String s = "abcdefg";   //출력할 문자열
@@ -59,8 +62,6 @@ bw.write(s+"\n");   //버퍼에 있는 값 전부 출력
 bw.flush();   //남아있는 데이터를 모두 출력시킴
 bw.close();   //스트림을 닫음
 ```
-
-
 
 #### BOJ_16928
 ```java
