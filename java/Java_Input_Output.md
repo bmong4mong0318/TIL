@@ -1,3 +1,11 @@
+- [Java Input](#java-input)
+	- [BufferReader](#bufferreader)
+		- [주의할 점](#주의할-점)
+	- [StringTokenizer](#stringtokenizer)
+			- [BOJ\_16928](#boj_16928)
+- [Java Ouput](#java-ouput)
+	- [BufferWriter](#bufferwriter)
+
 # Java Input
 
 ## BufferReader
@@ -24,21 +32,19 @@ public static void main(String[] args) throws IOException {}
 ```
 ---
  Read한 데이터는 Line단위로만 나눠지기에 공백단위로 데이터를 가공하려면 따로 작업을 해주어야 합니다.
-1.  StringTokenizer에 nextToken()함수를 쓰면 readLine()을 통해 입력받은 값을 공백단위로 구분하여 순서대로 호출할 수 있습니다.
-
+1. StringTokenizer에 nextToken()함수를 쓰면 readLine()을 통해 입력받은 값을 공백단위로 구분하여 순서대로 호출할 수 있습니다.
+2. String.split()함수를 활용하여 배열에 공백단위로 끊어서 데이터를 넣고 사용할 수 있습니다.
 ## StringTokenizer
 ```java
 StringTokenizer st = new StringTokenizer(s); //StringTokenizer인자값에 입력 문자열 넣음
+
 int a = Integer.parseInt(st.nextToken()); //첫번째 호출
 int b = Integer.parseInt(st.nextToken()); //두번째 호출
 
 String array[] = s.split(" "); //공백마다 데이터 끊어서 배열에 넣음
 ```
 
-2.   String.split()함수를 활용하여 배열에 공백단위로 끊어서 데이터를 넣고 사용하는 방식이다.
-
-
-# BOJ_16928
+#### BOJ_16928
 ```java
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -103,3 +109,8 @@ public class Main_BOJ_16928_뱀과사다리게임 {
     }
 }
 ```
+
+
+# Java Ouput
+
+## BufferWriter
