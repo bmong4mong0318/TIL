@@ -12,4 +12,5 @@
 - Stack 영역: 지역 변수, 파라미터(함수에 전달되는 인자)가 위치하는 공간
 
 ## 프로세스 상태
-![process](../img/process-state.png)
+![process_state](../img/process-state.png)
+
