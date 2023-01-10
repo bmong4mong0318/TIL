@@ -312,7 +312,7 @@ SELECT * FROM city_popul LIMIT 5;
 ```
 
 ## DELETE
-
+ 
 
 
 
