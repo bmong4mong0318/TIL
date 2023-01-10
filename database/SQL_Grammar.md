@@ -229,3 +229,91 @@ SELECT  mem_id "회원 아이디", SUM(price*amount) "총 구매 금액"
     HAVING SUM(price*amount) > 1000 -- 집계 함수에 대해서 조건을 제한
     ORDER BY SUM(price*amount) DESC;
 ```
+
+## INSERT 문
+테이블에 행 데이터를 삽입하는 명령입니다.
+
+### 기본 형식
+열 이름을 생략할 경우에 VALUES 다음에 나오는 값들의 순서 및 개수는 테이블을 정의할 때의 열 순서 및 개수와 동일해야 합니다. 
+```sql
+INSERT INTO 테이블 [(열1, 열2, ...)] VALUES (값1, 값2, ...)
+```
+
+```sql
+USE market_db;
+CREATE TABLE hongong1 (toy_id INT, toy_name CHAR(4), age INT);
+INSERT INTO hongong1 VALUES (1, '우디', 25);
+```
+
+나이(age)는 생략하고 싶다면 다음과 같이 적으면 됩니다. 이 경우에 생략한 열에는 `NULL` 값이 들어갑니다.
+```sql
+INSERT INTO hongong1 VALUES (1, '우디', 25);
+```
+### AUTO_INCREMENT
+열을 정의할때 1부터 증가하는 값을 입력해줍니다.
+```sql
+CREATE TABLE hongong2 (
+    toy_id INT AUTO_INCREMENT PRIMARY KEY, -- AUTO_INCREMENT로 지정하는 열은 꼭 PRIMARY KEY로 지정해줘야합니다.
+    toy_name CHAR(4),
+    age INT);
+ALTER TABLE hongong2
+```
+
+자동 증가하는 부분은 `NULL` 값으로 채워 놓으면 됩니다.
+```sql
+INSERT INTO hongong2 VALUES (NULL, '보핍', 25);
+INSERT INTO hongong2 VALUES (NULL, '슬링키', 22);
+INSERT INTO hongong2 VALUES (NULL, '렉스', 21);
+SELECT * FROM hongong2;
+```
+
+```sql
+CREATE TABLE hongong3 (
+    toy_id INT AUTO_INCREMENT PRIMARY KEY,
+    toy_name CHAR(4),
+    age INT);
+ALTER TABLE hongong3 AUTO_INCREMENT=1000; -- 시작값은 1000으로 지정
+SET @@auto_increment_increment=3; -- 증가값은 3으로 지정
+```
+
+### INSERT INTO ~ SELECT
+
+다른 테이블의 데이터를 가져와서 한 번에 입력할 수 있습니다. 
+
+이때, SELECT 문의 열 개수는 INSERT할 테이블의 열 개수와 같아야합니다.
+```sql
+CREATE TABLE city_popul (city_name CHAR(35), population INT); -- city_popul 테이블 생성
+
+INSERT INTO city_popul
+    SELECT Name, Population FROM world.city; --- world.city의 테이블의 내용을 city_popul 테이블에 입력
+```
+
+## UPDATE
+행 데이터를 수정합니다.
+### 기본 형식
+```sql
+UPDATE 테이블_이름
+    SET 열1=값1, 열2=값2
+    WHERE 조건;
+```
+```sql
+UPDATE city_popul
+    SET city_name = '뉴욕', population = 0
+    WHERE city_name = 'New  York';
+SELECT * FROM city_popul WHERE city_name = '뉴욕';
+```
+### WHERE가 없는 UPDATE 문
+```sql
+UPDATE city_popul
+    SET population = population / 10000;
+-- WHERE 절은 생략이 가능하지만 생략시 모든 행의 값이 변경
+-- 모든 인구 열(population)을 한꺼번에 10,000로 나누어서 인구 단위를 변경
+SELECT * FROM city_popul LIMIT 5;
+```
+
+## DELETE
+
+
+
+
+
