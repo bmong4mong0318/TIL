@@ -4,7 +4,7 @@
 프로그램은 명령어들의 모음을 포함한 디스크에 저장된 파일
 
 ## 프로세스의 메모리 구조
-![process](../../img/process.png)
+![process](../img/process.png)
 
 - Code 영역: 프로그램을 실행시키는 실행 파일 내의 명령어들이 위치하는 공간
 - Data 영역: 전역변수, static 변수들이 위치하는 공간
@@ -12,4 +12,4 @@
 - Stack 영역: 지역 변수, 파라미터(함수에 전달되는 인자)가 위치하는 공간
 
 ## 프로세스 상태
-![process-state](../../img/process-state.png)
+![process](../img/process-state.png)
