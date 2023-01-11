@@ -16,7 +16,11 @@
 ## OS 내에서 커널의 위치
 
 1. 하드웨어: 시스템의 토대가 되는 물리적 머신으로, 메모리(RAM)와 프로세서 또는 중앙 처리 장치(CPU) 그리고 입출력(I/O) 장치(예: [스토리지](https://www.redhat.com/ko/topics/data-storage), [네트워킹](https://www.redhat.com/ko/topics/hyperconverged-infrastructure/what-is-software-defined-networking) 및 그래픽)로 구성됩니다. CPU는 계산을 수행하고 메모리를 읽고 씁니다.
+
+
 2. Linux 커널: OS의 핵심입니다. (보시다시피 한가운데에 있습니다.) 메모리에 상주하며 CPU에 명령을 내리는 소프트웨어입니다.
+
+
 3. 사용자 프로세스: 실행 중인 프로그램으로, 커널이 [관리](https://www.redhat.com/ko/topics/management)합니다. 사용자 프로세스가 모여 사용자 공간을 구성합니다. 사용자 프로세스를 단순히 *프로세스*라고도 합니다. 또한, 커널은 이러한 프로세스 및 서버가 서로 통신(프로세스 간 통신 또는 IPC라고 함)할 수 있도록 해줍니다.
 
 시스템에서 실행되는 코드는 커널 모드 또는 사용자 모드라는 두 가지 모드 중 하나로 CPU에서 실행됩니다. 커널 모드에서 실행 중인 코드는 하드웨어에 무제한 액세스가 가능한 반면, 사용자 모드에서는 CPU 및 메모리가 SCI를 통해 액세스하는 것을 제한합니다. 메모리도 이와 유사하게 구분됩니다(커널 공간 및 사용자 공간). 이러한 두 가지 작은 세부 사항이 [보안](https://www.redhat.com/ko/topics/security), [컨테이너 구축](https://www.redhat.com/ko/topics/containers) 및 [가상 머신](https://www.redhat.com/ko/topics/virtualization/what-is-a-virtual-machine)을 위한 권한 구분과 같은 복잡한 작업의 토대가 됩니다.
