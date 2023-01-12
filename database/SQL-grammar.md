@@ -352,8 +352,8 @@ TRUNCATE TABLE big_table3; -- DELETE와 동일한 효과를 내지만 속도가 
 |   INT    |  4   |   약 -21억 ~ 21억   |
 |  BIGINT  |  8   |  약 -900경 ~ 900경  |
 
-
 UNSIGNED를 붙이면 0부터 범위가 지정됩니다.
+
 ```sql
 TINYINT : -128 ~ 127
 TINYINT UNSIGNED : 0 ~ 255
@@ -364,6 +364,7 @@ TINYINT UNSIGNED : 0 ~ 255
 |:-----------:|:---------:|
 |  CHAR(개수)   |  1 ~ 255  |
 | VARCHAR(개수) | 1 ~ 16383 |
+
 - VARCHAR(Variable Character)는 가변길이 문자형으로 3글자를 저장할 경우 3자리만 사용합니다.
 
 - VARCHAR가 CHAR보다 공간을 효율적으로 운영할 수 있지만, MySQL 내부적으로 성능(빠른 속도)면에서는 CHAR로 설정하는 것이 조금더 좋습니다.
@@ -391,6 +392,7 @@ TINYINT UNSIGNED : 0 ~ 255
 |:------:|:----------------------:|:---:|
 | FLOAT  | 4|소수점 아래 7자리까지 표현|
 |DOUBLE | 8 | 소수점 아래 15자리까지 표현|
+
 과학 기술용 데이터가 아닌 이상 FLOAT면 충분합니다.
 
 ### 날짜형
@@ -419,3 +421,58 @@ SELECT @txt, mem_name FROM member WHERE height > @height;
 -- 가수 이름==> 트와이스
 ```
 
+### PREPARE과 EXECUTE
+LIMIT에는 변수를 사용할 수 없기 때문에 PREPARE과 EXECUTE를 사용합니다.
+```sql
+SET @count = 3;
+PREPARE mySQL FROM 'SELECT mem_name, height FROM member ORDER BY height LIMIT ?';
+EXECUTE mySQL USING @count;
+
+-- 위 아래는 실핼 결과가 동일
+
+SELECT mem_name, height FROM member ORDER BY height LIMIT 3;
+```
+- PREPARE는 `SELECT ~~ LIMIT ?`문을 실행하지 않고 mySQL이라는 이름으로 준비만 해놓습니다.
+- ?는 현재는 모르지만 나중에 채워진다는 뜻입니다.
+- EXCUTE로 mySQL에 저장된 SELECT 문을 실행할 때, USING으로 물음표(?)에 @count변수의 값을 대입하는 것입니다.
+
+## 데이터 형 변환
+
+### 명시적 변환
+```sql
+CAST ( 값 AS 데이터_형식 [ (길이) ])
+CONVERT ( 값, 데이터_형식 [ (길이) ])
+```
+
+```sql
+SELECT AVG(price) AS '평균 가격' FROM buy; -- 142.9167
+```
+
+```sql
+SELECT CAST(AVG(price) AS SIGNED) '평균 가격' FROM buy; -- 143
+-- 또는
+SELECT CONVERT(AVG(price) , SIGNED) '평균 가격' FROM buy; -- 143
+```
+가격은 실수보다는 정수가 보기 좋기 때문에 바꿔주었습니다.
+```sql
+SELECT num, CONCAT(CAST(price AS CHAR), 'X', CAST(amount AS CHAR), '=') -- '30X2='와 같은 형태
+    '가격 X 수량', price * amount '구매액'
+FROM buy;
+```
+- 가격과 수량은 정수이지만 CAST() 함수를 통해 문자로 바꿨습니다.
+- CONCAT()함수는 문자를 이어주는 역할을 합니다.
+
+### 암시적 변환
+
+```sql
+SELECT '100' + '200'; -- 300
+```
+
+```sql
+SELECT CONCAT('100' + '200'); -- 100200
+```
+
+```sql
+SELECT COCAT(100, '200'); -- 100200
+SELECT 100 + '200'; -- 300
+```
