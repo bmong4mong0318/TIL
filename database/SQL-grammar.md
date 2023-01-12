@@ -4,8 +4,6 @@
 `혼자 공부하는 SQL`(한빛미디어) (2023.01.06~)
 
 ## 목차
-- [SQL문](#sql-)
-- [데이터 형식](#------)
 - [market_db.sql](#market-dbsql)
 - [USE 문](#use--)
 - [SELECT 문](#select--)
@@ -19,20 +17,25 @@
     * [ORDER BY](#order-by)
     * [LIMIT](#limit)
     * [DISTINCT](#distinct)
-
-
-## SQL문
-- CREATE: 테이블이나 데이터베이스를 만들 때 사용합니다.
-- UPDATE: 데이터를 수정할 때 사용합니다.
-- DELETE: 데이터를 삭제할 때 사용합니다.
-- SELECT: 데이터를 조회할 때 사용합니다.
-
-
-## 데이터 형식
-- INT: 소수점이 없는 정수형
-- CHAR: 문자형
-- DATE: 날짜형
-- NOT NULL: 비어있는 데이터를 허용하지 않습니다.
+    * [GROUP BY 절](#group-by--)
+    * [Having 절](#having--)
+- [INSERT 문](#insert--)
+    * [기본 형식](#------1)
+    * [AUTO_INCREMENT](#auto-increment)
+    * [INSERT INTO ~ SELECT](#insert-into---select)
+- [UPDATE](#update)
+    * [기본 형식](#------2)
+    * [WHERE가 없는 UPDATE 문](#where-----update--)
+- [DELETE](#delete)
+    * [기본형식](#----)
+    * [대용량 테이블의 삭제](#-----------)
+- [데이터 형식](#-------1)
+    * [정수형](#---)
+    * [문자형](#---)
+    * [대량의 데이터 형식](#----------)
+    * [실수형](#---)
+    * [날짜형](#---)
+- [변수의 사용](#------)
 
 ## market_db.sql
 ```sql
