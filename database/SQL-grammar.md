@@ -476,3 +476,57 @@ SELECT CONCAT('100' + '200'); -- 100200
 SELECT COCAT(100, '200'); -- 100200
 SELECT 100 + '200'; -- 300
 ```
+
+## JOIN
+
+### 기본 형식 (내부 조인)
+두 테이블에 모두 있는 내용만 출력됩니다.
+
+```sql
+SELECT <열 목록>
+FROM <첫 번째 테이블>
+    INNER JOIN <두 번째 테이블>
+    ON <조인될 조건>
+[WHERE 검색 조건]
+```
+구매한 기록이 있는 회원들의 목록만 추출합니다.
+```sql
+USE market_db;
+SELECT *
+    FROM buy
+    INNER JOIN member
+    ON buy.mem_id = member.mem_id
+WHERE buy.mem_id = 'GRL';
+```
+1. buy 테이블의 mem_id(buy.mem_id)인 'GRL'을 추출합니다.
+2. 'GRL'과 동일한 값을 회원 테이블의 mem_id(member.mem_id)열에서 검색합니다.
+3. 'GRL'이라는 아이디를 찾으면 구매 테이블과 회원 테이블의 두행을 결합(JOIN)합니다.
+
+### 활용
+```sql
+-- 중복된 이름 제거 
+SELCET DISTINCT M.mem_id, M.mem_name, B.prod_name, M.addr
+  FROM buy B -- 별칭의 사용
+    INNER JOIN member M
+    ON B.mem_id = M.mem_id
+  ORDER BY M.mem_id;
+```
+### 기본 형식 (외부 조인)
+한 쪽에만 데이터가 있어도 결과가 나옵니다.
+```sql
+SELECT <열 목록>
+    FROM <첫 번째 테이블(LEFT 테이블)>
+        <LEFT | RIGHT | FULL> OUTER JOIN <두 번째 테이블(RIGHT 테이블)>
+        ON <조인될 조건>
+[WHERE 검색 조건] ;
+```
+회원으로 가입만하고, 한번도 구매한 적이 없는 회원의 목록을 출력합니다.
+```sql
+SELECT M.mem_id, M.mem_name, B.prod_name, M.addr
+    FROM member M
+        LEFT OUTER JOIN buy B -- 왼쪽에 있는 회원 테이블을 기준으로 외부 조인합니다.
+        ON M.mem_id = B.mem_id
+    WHERE B.prod_name IS NULL
+    ORDER BY M.mem_id;
+```
+
