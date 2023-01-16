@@ -11,6 +11,7 @@ import hello.core.order.OrderServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+// 설정 정보 있는 곳에는 항상 `@Configuration`을 사용하면 스프링이 자연스럽게 싱글톤을 보장해준다.
 @Configuration
 public class AppConfig {
 
