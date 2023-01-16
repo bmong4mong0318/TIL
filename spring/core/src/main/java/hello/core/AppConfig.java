@@ -16,7 +16,7 @@ public class AppConfig {
 
     @Bean
     public MemberService memberService() {
-
+        System.out.println("call AppConfig.memberService");
         // 생성한 객체의 인스턴스의 참조(레퍼런스)를 '생성자를 통해서 주입(연결)' 해준다.
         // `MemberServiceImpl` 입장에서 보면 의존관계를 마치 외부에서 주입해주는 것 같다고 해서
         // DI(Dependency Injection) 의존성 주입이라고 한다.
@@ -26,11 +26,13 @@ public class AppConfig {
     // 역할이 드러나도록 함수를 분리한다.
     @Bean
     public MemoryMemberRepository memberRepository() {
+        System.out.println("call AppConfig.memberRepository");
         return new MemoryMemberRepository();
     }
 
     @Bean
     public OrderService orderService(){
+        System.out.println("call AppConfig.orderService");
         return new OrderServiceImpl(memberRepository(), discountPolicy());
     }
 
