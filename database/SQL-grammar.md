@@ -529,4 +529,21 @@ SELECT M.mem_id, M.mem_name, B.prod_name, M.addr
     WHERE B.prod_name IS NULL
     ORDER BY M.mem_id;
 ```
-
+## 스토어드 프로시저
+### IF ~ ELSE 문
+```sql
+DROP PROCEDURE IF EXISTS ifProc1; -- 기존에 ifProc()1을 만든 적이 있다면 삭제합니다.
+DELIMITER $$
+CREATE PROCEDURE ifProc1()
+BEGIN
+    DECLARE myNum INT; -- 변수 선언
+    SET myNum = 200;
+    IF myNum = 100 THEN
+        SELECT '100입니다.';
+    ELSE
+        SELECT '100이 아닙니다.';
+    END IF;
+END $$
+DELIMITER; -- $$를 사용해 스토어드 프로시저의 끝인지를 구별합니다.
+CALL ifProc1(); -- CALL로 호출하면 ifProc1()이 실행됩니다.
+```
