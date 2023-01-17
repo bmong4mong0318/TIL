@@ -536,14 +536,29 @@ DROP PROCEDURE IF EXISTS ifProc1; -- 기존에 ifProc()1을 만든 적이 있다
 DELIMITER $$
 CREATE PROCEDURE ifProc1()
 BEGIN
-    DECLARE myNum INT; -- 변수 선언
-    SET myNum = 200;
-    IF myNum = 100 THEN
-        SELECT '100입니다.';
+    DECLARE debutDate DATE; -- 변수 선언, 데뷔 일자
+    DECLARE curDate DATE; -- 오늘
+    DECLARE days INT; -- 활동한 일수
+        
+    SELECT debut_date INTO debutDate -- 에이핑크의 데뷔일자가 debutDate에 저장됩니다. 
+        FROM market_db.member
+        WHERE mem_id = 'APN';
+
+    SET curDATE = CURRENT_DATE(); -- 현재 날짜
+    SET days = DATEDIFF(curDATE, debutDate); -- 날짜의 차이, 일 단위
+        
+    IF (days/365) >= 5 THEN -- 5년이 지났다면
+        SELECT CONCAT('데뷔한 지', days, '일이나 지났습니다. 핑순이들 축하합니다!');
     ELSE
-        SELECT '100이 아닙니다.';
+        SELECT '데위한 지 ' + days + '일밖에 안되었네요. 핑순이들 화이팅~';
     END IF;
 END $$
 DELIMITER; -- $$를 사용해 스토어드 프로시저의 끝인지를 구별합니다.
 CALL ifProc1(); -- CALL로 호출하면 ifProc1()이 실행됩니다.
 ```
+#### 날짜 관련 함수
+- CURRENT_DATE(): 오늘 날짜를 알려줍니다.
+- CURRENT_TIMESTAMP(): 오늘 날짜 및 시간을 함께 알려줍니다.
+- DATEDIFF(날짜1, 날짜2): 날짜2부터 날짜1까지 일수로 몇일인지 알려줍니다.
+
+### CASE 문
