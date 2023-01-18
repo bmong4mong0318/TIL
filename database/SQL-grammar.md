@@ -562,3 +562,17 @@ CALL ifProc1(); -- CALL로 호출하면 ifProc1()이 실행됩니다.
 - DATEDIFF(날짜1, 날짜2): 날짜2부터 날짜1까지 일수로 몇일인지 알려줍니다.
 
 ### CASE 문
+```sql
+SELECT M.mem_id, M.mem_name, SUM(price*amount) "총구매액",
+       CASE
+           WHEN (SUM(price*amount) >= 1500) THEN '최우수고객'
+           WHEN (SUM(price*amount) >= 1000) THEN '우수고객'
+           WHEN (SUM(price*amount) >= 1) THEN '일반고객'
+           ELSE '유령고객'
+        END "회원등급"
+    FROM buy B
+        RIGHT OUTER JOIN member M
+        ON B.mem_id = M.mem_id
+    GROUP BY M.mem_id, M.mem_name
+    ORDER BY SUM(price*amount) DESC ;
+```
