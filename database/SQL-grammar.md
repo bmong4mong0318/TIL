@@ -621,3 +621,19 @@ END $$
 DELIMITER ;
 CALL whileProc1();
 ```
+
+### 동적 SQL 문
+SQL문은 내용이 고정되어 있는 경우가 대부분이다. 하지만 상황에 따라 내용 변경이 필요할 때 동적 SQL을 사용하면 변경되는 내용을 실시간으로 적용시켜 사용할 수 있습니다.
+#### PREPARE과 EXECUTE
+```sql
+DROP TABLE IF EXISTS gate_table;
+CREATE TABLE gate_table (id INT AUTO_INCREMENT PRIMARY KEY, entry_time DATETIME);
+
+SET @curDate = CURRENT_TIMESTAMP(); -- 현재 날짜와 시간
+
+PREPARE myQuery FROM 'INSERT INTO gate_table VALUES(NULL, ?)'; -- myQuery에 입력만 해놓는다.
+EXECUTE myQuery USING @curDate; -- 실행이 필요한 시점에 EXECUTE myQuery문 실행
+DEALLOCATE PREPARE myQuery; -- 실행 후에 문장 해제
+
+SELECT  * FROM gate_table;
+```
