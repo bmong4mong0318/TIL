@@ -576,3 +576,35 @@ SELECT M.mem_id, M.mem_name, SUM(price*amount) "총구매액",
     GROUP BY M.mem_id, M.mem_name
     ORDER BY SUM(price*amount) DESC ;
 ```
+### WHILE 문
+```sql
+DROP PROCEDURE IF EXISTS whileProc1;
+DELIMITER $$
+CREATE PROCEDURE whileProc1()
+BEGIN
+    DECLARE i INT;
+    DECLARE hap INT;
+    SET i = 1;
+    SET hap = 0;
+
+    myWhile: -- 레이블 지정
+    WHILE (i <= 100) DO
+        IF (i % 4 = 0) THEN
+            SET i = i + 1;
+            ITERATE myWhile; -- 지정한 label 문으로 가서 계속 진행
+        ENF IF;
+            
+        SET hap = hap + i;
+            
+        IF (hap > 1000) THEN
+            LEAVE myWhile; -- 지정한 label 문을 떠남. 즉 While 종료
+        END IF;
+            
+        SET i = i + 1;
+    END WHILE;
+
+    SELECT '1부터 100까지의 합(4의 배수 제외), 1000 넘으면 종료 ==>', hap;
+END $$
+DELIMITER ;
+CALL whileProc1();
+```
