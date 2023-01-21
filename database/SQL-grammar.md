@@ -623,7 +623,7 @@ CALL whileProc1();
 ```
 
 ### 동적 SQL 문
-SQL문은 내용이 고정되어 있는 경우가 대부분이다. 하지만 상황에 따라 내용 변경이 필요할 때 동적 SQL을 사용하면 변경되는 내용을 실시간으로 적용시켜 사용할 수 있습니다.
+SQL문은 내용이 고정되어 있는 경우가 대부분입니다. 하지만 상황에 따라 내용 변경이 필요할 때 동적 SQL을 사용하면 변경되는 내용을 실시간으로 적용시켜 사용할 수 있습니다.
 #### PREPARE과 EXECUTE
 ```sql
 DROP TABLE IF EXISTS gate_table;
@@ -678,4 +678,48 @@ FOREIGN KEY(mem_id) REFERENCES member(mem_id)
 INSERT INTO member VALUES('TWC', '트와이스', 9, '서울', '02', '11111111', 167, '2015-10-19');
 INSERT INTO member VALUES('BLK', '블랙핑크', 4, '경남', '055', '22222222', 163, '2016-8-8');
 INSERT INTO member VALUES('WMN', '여자친구', 6, '경기', '031', '33333333', 166, '2015-1-15');
+```
+
+### 제약 조건
+#### 기본 키 제약조건
+기본 키: 데이터를 구분 할 수 있는 식별자
+- 기본 키에 입력되는 값은 중복될 수 없으며, NULL 값이 입력될 수 없습니다.
+  - ex) 대부분의 인터넷 쇼핑몰에서는 회원 테이블의 기본 키를 회원 아이디로 설정해 놓았다.
+- 기본 키로 지정하면 클러스터형 인덱스가 자동으로 생성된다.
+- 테이블은 기본 키를 1개만 가질 수 있습니다.
+- 어떤 열에 설정해도 문제는 문법상 문제는 없으나 테이블의 특성을 가장 잘 반영하는 열을 선택하는 것이 좋습니다.
+
+##### CREATE TABLE에서 설정
+```sql
+USE naver_db;
+DROP TABLE IF EXISTS buy, member;
+CREATE TABLE member
+(   mem_id  CHAR(8) NOT NULL PRIMARY KEY, -- 열 이름 뒤에 붙혀주면 기본 키로 설정
+    mem_name VARCHAR(10) NOT NULL,
+    height TINYINT UNSIGEND NULL
+);
+```
+```sql
+USE naver_db;
+DROP TABLE IF EXISTS member;
+CREATE TABLE member
+(   mem_id  CHAR(8) NOT NULL,
+    mem_name VARCHAR(10) NOT NULL,
+    height TINYINT UNSIGEND NULL,
+    PRIMARY KEY (mem_id) -- 테이블의 제일 마지막에 붙여주면 그 열이 기본 키로 설정
+);
+```
+
+##### ALTER TABLE에서 설정
+이미 만들어진 테이블을 수정하는 ALTER TABLE 구문을 사용합니다.
+```sql
+DROP TABLE IF EXISTS member;
+CREATE TABLE member
+(   mem_id  CHAR(8) NOT NULL,
+    mem_name VARCHAR(10) NOT NULL,
+    height TINYINT UNSIGEND NULL,
+);
+ALTER TABLE member
+    ADD CONSTRAINT 
+    PRIMARY KEY (mem_id);
 ```
