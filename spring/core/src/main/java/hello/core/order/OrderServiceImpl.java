@@ -6,10 +6,17 @@ import hello.core.discount.RateDiscountPolicy;
 import hello.core.member.Member;
 import hello.core.member.MemberRepository;
 import hello.core.member.MemoryMemberRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+//final이 붙은 필드 변수를 파라미터로 받는 생성자를 만들어준다.
+@RequiredArgsConstructor
+// public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
+//        this.memberRepository = memberRepository;
+//        this.discountPolicy = discountPolicy;
+//    }
 public class OrderServiceImpl implements OrderService{
 
 //    private final DiscountPolicy discountPolicy = new FixDiscountPolicy();
@@ -24,16 +31,11 @@ public class OrderServiceImpl implements OrderService{
     // 해결책 : 누군가가 클라이언트인 `OrderServiceImpl`에 `DiscountPolicy`의 구현 객체를 대신 생성해서 주입해주어야 한다.
     // -> "구현 객체를 생성"하고 "연결"하는 책임을 가지는 별도의 설정 클래스를 만들어야 한다.
 
-    private final MemberRepository memberRepository;
-    private final DiscountPolicy discountPolicy;
-
     //생성자 주입은 순수한 자바언의 특징을 잘 살리는 방법이다.
     //항상 생성자 주입을 사용하고 필요시에 수정자 주입 방식을 옵션으로 부여한다. 필드 주입은 사용하지 않는게 좋다.
-    @Autowired
-    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
-        this.memberRepository = memberRepository;
-        this.discountPolicy = discountPolicy;
-    }
+
+    private final MemberRepository memberRepository;
+    private final DiscountPolicy discountPolicy;
 
     @Override
     public Order createOrder(Long memberId, String itemName, int itemPrice) {
