@@ -8,15 +8,16 @@ import hello.core.member.MemberRepository;
 import hello.core.member.MemoryMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
 //final이 붙은 필드 변수를 파라미터로 받는 생성자를 만들어준다.
-@RequiredArgsConstructor
 // public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
 //        this.memberRepository = memberRepository;
 //        this.discountPolicy = discountPolicy;
 //    }
+//@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService{
 
 //    private final DiscountPolicy discountPolicy = new FixDiscountPolicy();
@@ -33,6 +34,15 @@ public class OrderServiceImpl implements OrderService{
 
     //생성자 주입은 순수한 자바언의 특징을 잘 살리는 방법이다.
     //항상 생성자 주입을 사용하고 필요시에 수정자 주입 방식을 옵션으로 부여한다. 필드 주입은 사용하지 않는게 좋다.
+
+    //`@Autowired` 매칭 정리
+    //1.타입 매칭
+    //2.타입매칭의 결과가 2개 이상일 때 필드명, 파라미터 명으로 빈 이름 매칭
+    @Autowired
+    public OrderServiceImpl(MemberRepository memberRepository, @Qualifier("mainDiscountPolicy") DiscountPolicy discountPolicy) {
+        this.memberRepository = memberRepository;
+        this.discountPolicy = discountPolicy;
+    }
 
     private final MemberRepository memberRepository;
     private final DiscountPolicy discountPolicy;
