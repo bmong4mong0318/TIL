@@ -27,6 +27,8 @@ public class OrderServiceImpl implements OrderService{
     private final MemberRepository memberRepository;
     private final DiscountPolicy discountPolicy;
 
+    //생성자 주입은 순수한 자바언의 특징을 잘 살리는 방법이다.
+    //항상 생성자 주입을 사용하고 필요시에 수정자 주입 방식을 옵션으로 부여한다. 필드 주입은 사용하지 않는게 좋다.
     @Autowired
     public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
         this.memberRepository = memberRepository;
