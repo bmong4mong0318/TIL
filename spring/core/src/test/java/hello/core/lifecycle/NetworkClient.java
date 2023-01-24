@@ -1,5 +1,8 @@
 package hello.core.lifecycle;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
 public class NetworkClient {
 
     private String url;
@@ -26,12 +29,14 @@ public class NetworkClient {
         System.out.println("close " + url);
     }
 
-
+    //외부 라이브러리에는 적용하지 못한다. 외부 라이브러리를 초기화, 종료 해야하면 `@Bean`의 기능을 사용
+    @PostConstruct
     public void init() {
         connect();
         call("초기화 연결 메시지");
     }
 
+    @PreDestroy
     public void close() {
         disconnect();
     }

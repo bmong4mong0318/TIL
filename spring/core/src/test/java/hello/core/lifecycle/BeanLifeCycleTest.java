@@ -18,8 +18,7 @@ public class BeanLifeCycleTest {
     @Configuration
     static class LifeCycleConfig {
 
-        //
-        @Bean(initMethod = "init", destroyMethod = "close")
+        @Bean
         public NetworkClient networkClient() {
             NetworkClient networkClient = new NetworkClient();
             //생성자 안에서 무거운 초기화 작업을 함께 진행 하는것 보다는,
@@ -28,5 +27,4 @@ public class BeanLifeCycleTest {
             return networkClient;
         }
     }
-
 }
