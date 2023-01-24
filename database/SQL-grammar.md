@@ -723,3 +723,105 @@ ALTER TABLE member
     ADD CONSTRAINT 
     PRIMARY KEY (mem_id);
 ```
+
+#### 외래 키 제약조건
+두 테이블 사이의 관계를 연결해주고, 그 결과 데이터의 무결성을 보장해주는 역할을 합니다.
+외래 키가 설정된 열은 꼭 다른 테이블의 기본 키와 연결됩니다.
+
+- 기준 테이블: 기본 키가 있는 테이블
+- 참조 테이블: 외래 키가 있는 테이블
+
+##### CREATE TABLE에서 설정
+```sql
+DROP TABLE IF EXISTS buy, member;
+CREATE TABLE member
+(   mem_id    CHAR(8) NOT NULL PRIMARY KEY,
+    mem_name    VARCHAR(10) NOT NULL,
+    height  TINYINT UNSIGNED NULL
+);
+CREATE TABLE buy
+(
+    num     INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    user_id CHAR(8) NOT NULL,
+    prod_name CHAR(6) NOT NULL,
+    FOREIGN KEY(user_id) REFERENCES member(mem_id)
+);
+```
+```sql
+FOREIGN KEY(mem_id) REFERENCES member(mem_id)
+```
+구매 테이블(buy)의 열(user_id)이 참조하는 기준 테이블(member)의 열(mem_id)은 기본 키로 
+설정 되어 있다. 만약 기준 테이블의 열이 Primary Key 또는 Unique가 아니라면 외래 키 관계는 설정되지 않습니다.
+
+##### ALTER TABLE에서 설정
+```sql
+DROP TABLE IF EXISTS buy;
+CREATE TABLE buy
+(   num     INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    mem_id  CHAR(8) NOT NULL,
+    prod_name CHAR(6) NOT NULL
+);
+ALTER TABLE buy
+    ADD CONSTRAINT
+    FOREIGN KEY (mem_id) REFERENCES member(mem_id)
+    ON UPDATE CASCADE -- 기존 테이블의 열 이름이 변경되면 참조 테이블도 변경
+    ON DELETE CASCADE -- 기존 테이블의 데이터가 삭제되면 참조 테이블의 데이터도 삭제
+```
+#### 고유 키 제약조건
+고유 키 제약조건은 '중복되지 않는 유일한 값'을 입력해야하는 조건입니다. 
+```plain text
+기본 키 제약 조건 다른 점
+
+- 고유 키 제약조건은 NULL 값을 허용
+- NULL 값은 여러 개가 입력되어도 상관 X
+- 기본 키는 테이블에 1개만 설정해야 하지만, 고유 키는 여러개도 설정 가능
+```
+```sql
+DROP TABLE IF EXISTS buy, member;
+CREATE TABLE member
+(   mem_id    CHAR(8) NOT NULL PRIMARY KEY,
+    mem_name    VARCHAR(10) NOT NULL,
+    height  TINYINT UNSIGNED NULL,
+    email   CHAR(30) NULL UNIQUE -- 중복은 허용하지 않지만, 비어 있는 값은 허용
+);
+```
+
+#### 체크 제약조건
+입력되는 데이터를 점검하는 기능입니다.
+```sql
+DROP TABLE IF EXISTS member;
+CREATE TABLE member
+(   mem_id      CHAR(8) NOT NULL PRIMARY KEY,
+    mem_name    VARCHAR(10) NOT NULL,
+    height  TINYINT UNSIGNED NULL CHECK (height >= 100),
+    phone1  CHAR(3) NULL
+);
+```
+ALTER TABLE 문으로 제약조건을 추가해도 됩니다.
+```sql
+ALTER TABLE member
+    ADD CONSTRAINT
+    CHECK (phone 1 IN ('02', '031', '032', '054', '055', '061'));
+```
+
+#### 기본값 정의
+기본값 정의는 값을 입력하지 않았을 때 자동으로 입력될 값을 지정해 놓는 방법입니다.
+```sql
+DROP TABLE IF EXISTS member;
+CREATE TABLE member
+(   mem_id      CHAR(8) NOT NULL PRIMARY KEY,
+    mem_name    VARCHAR(10) NOT NULL,
+    height  TINYINT UNSIGNED DEFAULT 100,
+    phone1  CHAR(3) NULL
+);
+```
+ALTER TABLE 문으로 제약조건을 추가해도 됩니다.
+```sql
+ALTER TABLE member
+    ALTER COLUMN phone1 SET DEFAULT '02';
+```
+기본값이 설정된 열에 기본값을 입력하려면 default라고 써주면 됩니다.
+```sql
+INSERT INTO member VALUES('RED', '레드벨벳', 161, '054');
+INSERT INTO member VALUES('SPC', '우주소녀', default, default);
+```
