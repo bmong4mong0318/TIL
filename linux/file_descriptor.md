@@ -26,8 +26,8 @@ fd는 해당 프로세스의 open file 을 관리하는 구조체 배열의 inde
 ### 3 번 index 로 test.txt 를 찾는 방법은 
 ```
 1. fd_array[3] 이 pointing 하고 있는 file 구조체의 f_dentry 를 얻어오게됩니다.
-    - dentry 란 것은 directory entry 를 의미하는데, 리눅스에서 디렉토리에 접근을 빠르게 하기 위한 구조체로 사용하고 있습니다.
-    - open() 시스템 콜을 호출하게 되면, test.txt 가 존재하는 위치와 관련되어 dentry 구조체가 만들어집니다. 
+   - dentry 란 것은 directory entry 를 의미하는데, 리눅스에서 디렉토리에 접근을 빠르게 하기 위한 구조체로 사용하고 있습니다.
+   - open() 시스템 콜을 호출하게 되면, test.txt 가 존재하는 위치와 관련되어 dentry 구조체가 만들어집니다. 
    - dentry 구조체는 관련된 inode 구조체를 가리키는 필드를 포함합니다.
 2. open("test.txt',...) 함수로 호출된 파일은 test.txt 에 대한 dentry 생성, inode 생성(또는 읽음)합니다.
 3. 해당 프로세스의 open 파일 관리 구조체인 files_struct 의 fd_array 의 비어있는 위치에 test.txt 의 dentry 를 포인팅하고 그 index 인 3을 넘겨줍니다.
