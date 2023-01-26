@@ -825,3 +825,42 @@ ALTER TABLE member
 INSERT INTO member VALUES('RED', '레드벨벳', 161, '054');
 INSERT INTO member VALUES('SPC', '우주소녀', default, default);
 ```
+
+### 뷰
+
+#### 뷰의 형식
+```sql
+CREATE VIEW 뷰_이름
+AS
+    SELECT 문;
+```
+#### 뷰를 사용하는 이유
+1. 보안에 도움이 됩니다.
+   - 뷰를 통해 한정된 정보만 제공을 하여 권한을 제한합니다.
+   - 사용자마다 테이블에 접근하는 권한에 차별을 둬서 처리하도록 하여 보안을 강화합니다.
+2. 복잡한 SQL을 단순하게 만들 수 있습니다.
+
+매번 아래와 같은 복잡한 쿼리를 입력하는 것은 번거롭습니다.
+```sql
+SELECT B.mem_id, M.mem_name, B.prod_name, M.addr, CONCAT(M.phone1, M.phone2) '연락처'
+    FROM buy B
+        INNER JOIN member M
+        ON B.mem_id = M.mem_id;
+```
+따라서 아래와 이 SQL을 다음과 같이 뷰로 생성해 놓고 해당 뷰에만 접근 할 수 있도록 합니다.
+```sql
+CREATE view v_memberbuy
+AS 
+    SELECT B.mem_id, M.mem_name, B.prod_name, M.addr, CONCAT(M.phone1, M.phone2) '연락처'
+        FROM buy B
+            INNER JOIN member M
+            ON B.mem_id = M.mem_id;
+```
+v_memberbuy를 테이블이라고 생각하고 접근 할 수 있습니다.
+```sql
+SELECT * FROM v_memberbuy WHERE mem_name = '블랙핑크';
+```
+#### 뷰의 실제 작동
+##### 뷰의 실제 생성, 수정, 삭제
+
+
