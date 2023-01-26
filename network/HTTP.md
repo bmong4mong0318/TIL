@@ -74,7 +74,29 @@
     - html 내부 북마크 등에 사용
     - 서버에 전송하는 정보 아님
 ### 웹 브라우저 요청 흐름
+- https://www.google.com:443/search?q=hello&hl=ko
+- 예) 웹 브라우저(IP: 100.100.100.1), 구글 서버(IP: 200.200.200.2)
+1. 웹 브라우저가 DNS 서버를 조회 -> IP: 200.200.200.2와 포트(443) 정보 획득
+2. HTTP 요청 메시지 생성
+```
+GET /search?q=hello&hl=ko HTTP/1.1
+HOST: www.google.com
+```
+3. SOCKET 라이브러리를 통해 전달
+   - A: TCP/IP 연결(IP, PORT)
+   - B: 데이터 전달
+4. TCP/IP 패킷 생성, HTTP 메시지 포함, 서버로 전송
+5. 서버에서 HTTP 응답 메시지 생성
+```
+HTTP/1.1 200 OK
+Content-Type: text/html;charset=UTF-8
+Content-Length: 3423
 
+<html>
+  <body>...</body>
+</html>
+```
+6. 웹 브라우저 HTML 렌더링
 
 ## HTTP 기본
 
