@@ -862,5 +862,46 @@ SELECT * FROM v_memberbuy WHERE mem_name = '블랙핑크';
 ```
 #### 뷰의 실제 작동
 ##### 뷰의 실제 생성, 수정, 삭제
+생성
+```sql
+USE market_db;
+CREATE VIEW v_viewtest1
+AS
+        SELECT B.mem_id `Member ID`, M.mem_name AS `Member Name`,
+            B.prod_name `Product Name`,
+                        CONCAT(M.phone1, M.phone2) AS "Office Phone"
+            FROM buy B
+                INNER JOIN member M
+                ON B.mem_id = M.mem_id;
 
+SELECT DISTINCT `Member ID`, `Member Name` FROM v_viewtest1; -- 별칭을 사용할 때는 백틱(`)을 사용
+```
+수정
+```sql
+ALTER VIEW v_viewtest1
+AS
+    SELECT B.mem_id `회원 아이디`, M.mem_name AS '회원 이름',
+        B.prod_name "제품 이름",
+                    CONCAT(M.phone1, M.phone2) AS "연락처"
+        FROM buy B
+            INNER JOIN member M
+            ON B.mem_id = M.mem_id;
+
+SELECT  DISTINCT `회원 아이디`, `회원 이름` FROM v_viewtest1; -- 열 이름에 한글 사용 가능
+```
+삭제
+```sql
+DROP VIEW v_viewtest1;
+```
+##### 뷰의 정보 확인
+```sql
+USE market_db;
+CREATE OR REPLACE VIEW v_viewtest2 -- DROP VIEW와 CREATE VIEW를 연속으로 작성한 효과
+AS
+    SELECT mem_id, mem_name, addr FROM member;
+```
+DESCRIBE 문으로 기존 뷰의 정보를 확인할 수 있습니다. PRIMARY KEY 등의 정보는 확인되지 않습니다.
+```sql
+DESCRIBE v_viewtest2;
+```
 
