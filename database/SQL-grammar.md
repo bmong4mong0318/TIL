@@ -5,7 +5,7 @@
 
 ## 목차
 - [market_db.sql](#market-dbsql)
-- [USE 문](#use_문)
+- [USE 문](#use-문)
 - [SELECT 문](#select--)
   * [기본 형식](#-----)
   * [FROM](#from)
