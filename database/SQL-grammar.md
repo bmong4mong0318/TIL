@@ -1,4 +1,4 @@
-# SQL 스터디
+# SQL 문법
 ![](https://image.aladin.co.kr/product/28203/15/cover200/k032835973_1.jpg)
 
 `혼자 공부하는 SQL`(한빛미디어) (2023.01.06 ~ 2023.01.30.)
