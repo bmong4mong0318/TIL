@@ -3,7 +3,7 @@
 ### DATE_FORMAT() 
 DATE_FORMAT(날짜, 형식): 날짜를 지정한 항셕으로 출력합니다.
 ```sql
-SELECT DATE_FORMAT(NOW(),'%Y-%m-%d') AS 컬럼명 FROM 테이블명
+SELECT DATE_FORMAT(변경하기 원하는 값 또는 칼럼,'%Y-%m-%d') AS 컬럼명 FROM 테이블명
 -- 2022-12-29 출력
 ```
 
