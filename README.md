@@ -4,7 +4,7 @@
 ## Spring
 - [스프링 입문 - 코드로 배우는 스프링 부트, 웹 MVC, DB 접근 기술](https://github.com/bmong4mong0318/TIL/tree/main/spring/hello/hello-spring)
 - [스프링 핵심 원리 - 기본편](https://github.com/bmong4mong0318/TIL/tree/main/spring/core)
-- [스프링 MVC 1편 - 백엔드 웹 개발 핵심 기술]() 
+- [실전! 스프링 부트와 JPA 활용1]() 
 
 ## Database
 - [SQL 기본 문법 정리](https://github.com/bmong4mong0318/TIL/blob/main/database/SQL-grammar.md#insert-%EB%AC%B8)
