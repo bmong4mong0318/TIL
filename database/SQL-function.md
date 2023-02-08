@@ -20,3 +20,17 @@ SELECT YEAR(NOW()) FROM 테이블명
 ```sql
 ROUND(숫자 or 열 이름, 반올림 할 자리값)
 ```
+
+### UNION()
+각각에 쿼리에서 나온 데이터를 하나로 합쳐주는 역할을 하고 있으며, 중복되는 값도 그대로 출력이 됩니다.
+```sql
+SELECT ID, NAME FROM TABLE1;
+ UNION ALL
+ SELECT ID, NAME FROM TABLE2;
+```
+중복되는 부분은 하나에 로우로만 출력이 됩니다.
+```sql
+SELECT ID, NAME FROM TABLE1;
+ UNION
+ SELECT ID, NAME FROM TABLE2;
+```
