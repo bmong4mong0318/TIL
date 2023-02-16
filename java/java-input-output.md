@@ -1,20 +1,20 @@
 - [Java Input](#java-input)
-	- [BufferReader](#bufferreader)
-		- [주의할 점](#주의할-점)
-	- [StringTokenizer](#stringtokenizer)
+  - [BuffereDReader](#bufferedreader)
+    - [주의할 점](#주의할-점)
+  - [StringTokenizer](#stringtokenizer)
 - [Java Ouput](#java-ouput)
-	- [BufferWriter](#bufferwriter)
-			- [BOJ\_16928](#boj_16928)
+  - [BufferWriter](#bufferwriter)
+      - [BOJ\_16928](#boj_16928)
 
 # Java Input
 
-## BufferReader
+## BuffereDReader
 기존에 쓰던 `scanner`와 `System.out.println()`보다 속도 측면에서 훨씬 빠르기 때문에 (입력된 데이터가 바로 전달되지 않고 버퍼를 거쳐 전달되므로 데이터 처리 효율성을 높임) 많은 양의 데이터를 처리할 때 유리합니다.
 
 ### 주의할 점
 1. readLine()시 리턴값을 String으로 고정되기에 String이 아닌 다른타입으로 입력을 받을려면 형변환을 꼭 해주어야합니다. 
 ```java
-BufferReader br = new BufferReader(new InputStreamReader(System.in));
+BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 String s = bf.readLine(); //return 값이 String
 int i = Integer.parseInt(bf.readLine()); //Int 
 ```
