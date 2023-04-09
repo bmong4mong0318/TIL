@@ -19,6 +19,8 @@ PDF: [Operating Systems: Three Easy Pieces](https://pages.cs.wisc.edu/~remzi/OST
   - [예제: 배열 접근](#예제-배열-접근)
     - [지역성](#지역성)
   - [TLB 미스의 처리](#tlb-미스의-처리)
+    - [CISC(complex-instruction set computers)](#cisccomplex-instruction-set-computers)
+    - [RISC(reduced instruction set computing)](#riscreduced-instruction-set-computing)
 - [20. 페이징: 더 작은 테이블](#20-페이징-더-작은-테이블)
 
 ## 주소 공간 (address space)
@@ -323,5 +325,34 @@ for (int i = 0; i < 10; i++){
    - 배열을 순차적으로 읽는 프로그램이 공간 지역성을 갖는 대표적인 예이다.
 
 ### TLB 미스의 처리
+
+크게 두가지 방법이 있다. 하드웨어와 소프트웨어(운영체제)이다.
+
+#### CISC(complex-instruction set computers)
+
+미스 발생시 **하드웨어**는 다음과 같은 일을 한다:
+
+1. 페이지 테이블에서 원하는 페이지 테이블 엔트리를 찾고,
+2. 필요한 변환 정보를 추출하여,
+3. TLB를 갱신한 후,
+4. TLB 미스가 발생한 명령어를 재실행한다.
+
+> 대표적인 예) 인텔 x86 CPU(하드웨어로 관리되는 TLB)
+
+#### RISC(reduced instruction set computing)
+
+- CISC 보다 최근에 등장한 컴퓨터 구조이다.
+
+- RISC 기반 컴퓨터는 소프트웨어 관리 TLB를 사용한다.
+
+- RISC 기반 컴퓨터에서 TLB 미스를 처리하는 과정은 다음과 같다.
+  - TLB에서 주소 찾는 것이 실패하면 하드웨어는 예외 시그널을 발생시킨다.
+  - 예외 시그널을 받은 운영체제는 명령어 실행을 잠정 중지하고, 실행 모드를 커널모드로 변경하여, 커널 코드 실행을 준비한다.
+    - 이때 핵심은 커널 주소 공간을 접근할 수 있도록 특권 레벨(privilege level로) 상향 조정하는 것이다.
+  - 커널 모드로 변경이 되면 트랩 핸들러를 실행한다.
+    - 이때 실행되는 트랩핸들러는 TLB 미스의 처리를 담당하는 운영체제 코드이다.
+  - 이 트랩 핸들러는 페이지 테이블을 검색하여 변환 정보를 찾고, TLB 접근이 가능한 특권 명령어를 사용하여 TLB를 갱신한 후에 리턴한다.
+  - 트랩 핸들러에서 리턴되면 하드웨어가 명령어를 재실행한다.
+    - 트랩 핸들러가 TLB를 갱신했으므로 이제는 TLB 히트가 날 것이다.
 
 ## 20. 페이징: 더 작은 테이블
