@@ -15,6 +15,8 @@ PDF: [Operating Systems: Three Easy Pieces](https://pages.cs.wisc.edu/~remzi/OST
     - [각 메모리 참조 시 일어나느 세부 동작](#각-메모리-참조-시-일어나느-세부-동작)
   - [메모리 트레이스](#메모리-트레이스)
 - [19. 페이징: 더 빠른 변환 (TLB)](#19-페이징-더-빠른-변환-tlb)
+  - [TLB 제어 흐름 알고리즘](#tlb-제어-흐름-알고리즘)
+  - [예제: 배열 접근](#예제-배열-접근)
 - [20. 페이징: 더 작은 테이블](#20-페이징-더-작은-테이블)
 
 ## 주소 공간 (address space)
@@ -210,7 +212,7 @@ array.c의 어셈블리 코드
 추가적으로 mov 명령어는 메모리 참조를 한번 한다.
 
 처음 다섯번의 루프 반복에 대한 전체과정
-![sc](../img/screenshot-2023-04-09.png)
+![](../img/os-tes-1.png)
 
 - 가상 주소가 좌측 Y축, 물리 주소가 우측 Y축
 - 가장 아래 그래프가 명령어 메모리 참조
@@ -223,5 +225,79 @@ array.c의 어셈블리 코드
 - 이러한 네번의 반입과 한번의 메모리 갱신을 위한 주소 변환을 위한 총 다섯번의 페이지 테이블 접근
 
 ## 19. 페이징: 더 빠른 변환 (TLB)
+
+운영체제의 실행 속도를 개선하기 위해서 하드웨어의 도움을 받는다.
+
+**TLB**: 변환-색인 버퍼(translation-lookside buffer)
+
+- 칩의 메모리 관리부(memory-management unit, MMU)의 일부다.
+- 자주 참조되는 가상 주소-실주소 변환 정보를 저장하는 하드웨어 캐시이다.
+
+가상 메모리 참조시, 하드웨어는 먼저 TLB에 원하는 변환 정보가 있는지를 확인한다. 만약 있다면 페이지 테이블을 통하지 않고 변환을 빠르게 수행한다.
+
+### TLB 제어 흐름 알고리즘
+
+```
+1 VPN = (VirtualAddress & VPN_MASK) >> SHIFT
+2 (Success, TlbEntry) = TLB_Lookup(VPN)
+3 if (Success == True) // TLB Hit
+4     if (CanAccess(TlbEntry.ProtectBits) == True)
+5         Offset = VirtualAddress & OFFSET_MASK
+6         PhysAddr = (TlbEntry.PFN << SHIFT) | Offset
+7         Register = AccessMemory(PhysAddr)
+8     else
+9         RaiseException(PROTECTION_FAULT)
+10 else // TLB Miss
+11    PTEAddr = PTBR + (VPN * sizeof(PTE))
+12    PTE = AccessMemory(PTEAddr)
+13    if (PTE.Valid == False)
+14        RaiseException(SEGMENTATION_FAULT)
+15    else if (CanAccess(PTE.ProtectBits) == False)
+16        RaiseException(PROTECTION_FAULT)
+17    else
+18        TLB_Insert(VPN, PTE.PFN, PTE.ProtectBits)
+19        RetryInstruction()
+```
+
+1번라인. 가상 페이지 번호(VPN)을 추출한다.
+
+2번라인. 해당 VPN의 존재 여부를 검사한다.
+
+- 만약 존재하면 **TLB 히트** 이고 TLB가 변환 값을 갖고 있다는 것을 뜻한다.
+- 이제 해당 TLB 항목에서 페이지 프레임 번호(PFN)를 추출할 수 있다.
+
+4번라인. 해당 페이지에 대한 접근 권한 검사가 성공하면
+
+5~7번라인. 그 정보 를 원래 가상주소의 오프셋과 합쳐서 원하는 물리 주소(PA)를 구성하고 메모리에 접근 할 수 있다.
+
+**TLB 미스**인 경우에는 할일이 많다.
+
+11~12번 라인. 하드웨어가 변환 정보를 찾기 위해서 페이지 테이블에 접근하며
+
+13~15번 라인. 프로세스가 생성한 가상 메모리 참조가 유효하고 접근 가능하다면
+
+18번 라인. 해당 정보를 TLB로 읽어들인다.
+
+- 이는 매우 시간이 많이 소요되는 작업이다. 페이지 테이블 접근을 위한 12번 라인의 메모리 참조 때문이다.
+- 메모리 접근 연산은 다른 CPU연산(예, 덧셈, 곱셈 등)에 비해 매우 시간이 오래 걸린다.
+- TLB 미스가 많이 발생할수록 메모리 접근 횟수가 많아진다.
+
+### 예제: 배열 접근
+
+- 가상 주소 100번지의 10개의 4바이트 크기의 정수 배열이 존재한다.
+- 가상 주소 공간은 8비트이며, 페이지의 크기는 16바이트이다.
+- 가상 주소는 4비트 VPN(16개의 가상 페이지들)과 4비트 오프셋(각 페이지는 16바이트 크기)
+
+```c
+int sum = 0;
+for (int i = 0; i < 10; i++){
+  sum += a[i];
+}
+```
+
+![](../img/os-tes-2.png)
+
+첫번째 배열의 항목(a[0])은 (VPN=06, offset=04)에서 시작한다.
+세 개의
 
 ## 20. 페이징: 더 작은 테이블
