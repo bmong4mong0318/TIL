@@ -2,6 +2,7 @@
 
 [PDF:Operating Systems: Three Easy Pieces](https://pages.cs.wisc.edu/~remzi/OSTEP/)
 
+- [6. 제한적 직접 실행 원리(Limited Direct Execution)](#6-제한적-직접-실행-원리limited-direct-execution)
 - [주소 공간 (address space)](#주소-공간-address-space)
 - [주소 변환 (address translation)](#주소-변환-address-translation)
 - [17. 세그멘테이션](#17-세그멘테이션)
@@ -51,9 +52,11 @@
     - [시계 알고리즘(clock algorithm)](#시계-알고리즘clock-algorithm)
   - [갱신된 페이지(Dirty Page)의 고려](#갱신된-페이지dirty-page의-고려)
   - [다른 VM 정책들](#다른-vm-정책들)
-    - [**요구 페이징(damand paging) 정책**](#요구-페이징damand-paging-정책)
-    - [**클러스터링**](#클러스터링)
+    - [요구 페이징(damand paging) 정책](#요구-페이징damand-paging-정책)
+    - [클러스터링](#클러스터링)
   - [쓰레싱(Thrashing)](#쓰레싱thrashing)
+
+## 6. 제한적 직접 실행 원리(Limited Direct Execution)
 
 ## 주소 공간 (address space)
 
@@ -712,7 +715,7 @@ LRU 에서는 어떤 페이지가 가장 최근에 또는 가장 오래전에 �
 
 VM 시스템은 페이지 교체 정책만을 사용하지는 않는다. **페이지 선택(page selection) 정책**
 
-#### **요구 페이징(damand paging) 정책**
+#### 요구 페이징(damand paging) 정책
 
 이 정책은 말 그대로 "요청된 후 즉시", 즉 페이지가 실제로 접근될 때 운영체제가 해당 페이지를 메모리로 읽어들인다.
 
@@ -720,7 +723,7 @@ VM 시스템은 페이지 교체 정책만을 사용하지는 않는다. **페�
 
 이와 같은 동작을 **선반입(prefetching)** 이라고 하며 성공할 확률이 충분히 높을 때에만 해야 한다.
 
-#### **클러스터링**
+#### 클러스터링
 
 운영체제가 변경된 페이지를 디스크에 반영하는데 관련된 방식이다.
 
