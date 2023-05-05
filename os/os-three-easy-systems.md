@@ -70,6 +70,12 @@
     - [요구 페이징(damand paging) 정책](#요구-페이징damand-paging-정책)
     - [클러스터링](#클러스터링)
   - [쓰레싱(Thrashing)](#쓰레싱thrashing)
+- [26. 병행성: 개요](#26-병행성-개요)
+  - [프로세스와 쓰레드의 큰 차이점 몇가지](#프로세스와-쓰레드의-큰-차이점-몇가지)
+  - [왜 쓰레드를 사용하는가?](#왜-쓰레드를-사용하는가)
+  - [예제: 쓰레드 생성](#예제-쓰레드-생성)
+  - [데이터의 공유](#데이터의-공유)
+  - [제어 없는 스케줄링](#제어-없는-스케줄링)
 
 ## 4. 프로세스의 개념
 
@@ -893,3 +899,125 @@ VM 시스템은 페이지 교체 정책만을 사용하지는 않는다. **페�
 일반적으로 **진입 제어(admission control)** 라고 알려져 있는 이 방법은 많은 일들을 엉성하게 하는 것보다는 더 적은 일을 제대로 하는 것이 나을 때가 있다고 말한다.
 
 일부 버전의 Linux는 메모리 요구가 초과되면 **메모리 부족 킬러(out-of-memory killer)** 를 실행시킨다. 이 데몬은 많은 메모리를 요구하는 프로세스를 골라 죽이는, 그다지 교묘하지 않은 방식으로 메모리 요구를 줄인다.
+
+## 26. 병행성: 개요
+
+멀티 쓰레드 프로그램은 하나 이상의 실행 지점(독립적으로 불러 들여지고 실행될 수 있는 여러개의 PC 값)을 가지고 있다.
+
+### 프로세스와 쓰레드의 큰 차이점 몇가지
+
+- 쓰레드들은 주소 공간을 공유하기 때문에 동일한 값에 접근할 수 있다는 것이다.
+- 쓰레드간의 문맥 교환(context switcher)에서는 주소 공간을 그대로 사용한다.
+- 멀티쓰레드 프로세스의 주소 공간에는 하나의 스택이 아니라 쓰레드마다 스택이 할이 할당 되어 있다.
+
+### 왜 쓰레드를 사용하는가?
+
+1. 병렬 처리(paralleism)
+   1. 표준 **단일 쓰레드(single-threaded)** 프로그램을 멀티프로세서 상에서 같은 작업을 하는 프로그램을 변환하는 작업을 **병렬화(paralleization)** 라고 부르며, CPU 마다 하나의 쓰레드를 사용하여 주어진 일을 하는 것이 최신 하드웨어 상에서 프로그램을 더 빠르게 실행하게 만드는 방법이다.
+2. 느린 I/O로 인해 프로그램 실행이 멈추지 않도록 하기 위해
+   1. 쓰레딩은 하나의 프로그램 안에서 I/O와 다른 작업이 중첩(overlap)될 수 있게 한다.
+   2. 이는 여러 프로그램을 대상으로 프로세스를 멀티 프로그래밍(multiprogramming)하는 것과 비슷하다.
+
+### 예제: 쓰레드 생성
+
+한 쓰레드는 "A"라고 출력하고 다른 쓰레드는 "B" 라고 출력하는 독립적인 두 개의 쓰레드를 생성하는 프로그램
+
+```c
+#include <stdio.h>
+#include <assert.h>
+#include <pthread.h>
+#include "common.h"
+#include "common_threads.h"
+
+void *mythread(void *arg) {
+  printf("%s\n", (char *) arg);
+  return NULL;
+}
+
+int main(int argc, char *argv[]) {
+  pthread_t p1, p2;
+  int rc;
+  printf("main: begin\n");
+  Pthread_create(&p1, NULL, mythread, "A");
+  Pthread_create(&p2, NULL, mythread, "B");
+
+  // join waits for the threads to finish
+  Pthread_join(p1, NULL);
+  Pthread_join(p2, NULL);
+  printf("main: end\n");
+  return 0;
+}
+```
+
+스케줄러의 동작에 따라 다르겠지만, 쓰레드가 생성되면, 즉시 실행될 수도 있고, 준비(ready) 상태에서 실행은 되지 않을 수도 있다.
+
+두개의 쓰레를 생성한 후에 메인 쓰레드는 pthread_join()을 호출하여 특정 쓰레드의 동작의 종료를 대기한다. T1, T2가 실행되고 완료된 후에야 마침내 메인 쓰레드가 다시 실행될 수 있다.
+
+이때 T1이 T2보다 먼저 생성된 경우라 하더라도 만약 스케쥴러가 T2를 먼저 실행하면 "B"가 "A"보다 먼저 출력될 수도 있다. 먼저 생성되었다고 해서 먼저 실행될 것이라는 가정을 할 어떤 이유도 없다.
+
+### 데이터의 공유
+
+```c
+#include <stdio.h>
+#include <pthread.h>
+#include "common.h"
+#include "common_threads.h"
+
+static volatile int counter = 0;
+
+// mythread()
+//
+// Simply adds 1 to counter repeatedly, in a loop
+// No, this is not how you would add 10,000,000 to
+// a counter, but it shows the problem nicely.
+//
+void *mythread(void *arg) {
+  printf("%s: begin\n", (char *) arg);
+  int i;
+  for (i = 0; i < 1e7; i++) {
+    counter = counter + 1;
+  }
+  printf("%s: done\n", (char *) arg);
+  return NULL;
+}
+
+// main()
+//
+// Just launches two threads (pthread_create)
+// and then waits for them (pthread_join)
+//
+int main(int argc, char *argv[]) {
+  pthread_t p1, p2;
+  printf("main: begin (counter = %d)\n", counter);
+  Pthread_create(&p1, NULL, mythread, "A");
+  Pthread_create(&p2, NULL, mythread, "B");
+
+  // join waits for the threads to finish
+  Pthread_join(p1, NULL);
+  Pthread_join(p2, NULL);
+  printf("main: done with both (counter = %d)\n", counter);
+  return 0;
+}
+```
+
+counter 의 예상값은 20000000 이지만, 때론 19345221 이나 19221041 과같은 오차가 발생한다.
+
+### 제어 없는 스케줄링
+
+counter에 단순히 1이라는 숫자를 더하려고 한다.
+
+```assembly
+mov 0x8049a1c, %eax
+add $0x1, %eax
+mov %eax, 0x8049a1c
+```
+
+counter 변수 위치의 주소는 0x8049alc 라고 가정한다.
+
+1. x86의 mov 명령어가 명시한 메모리 주소의 값을 읽어들인 후 eax 레지스터에 넣는다.
+2. 1 (0x1)을 eax 레지스터의 값에 더한다.
+3. 마지막으로 eax에 저장되어 있는 값을 메모리의 원래의 주소에 다시 저장한다.
+
+두 개의 쓰레드 중에 쓰레드 1이 counter를 증가시키는 코드 영역에 진입하여 counter 값을 1 증가시키려는 상황을 가정해보자.
+
+counter에 있는 값이
