@@ -1179,3 +1179,11 @@ void unlock(lock_t *mutex){
    - **spin-wait** 라는 방법을 사용하여 플래그의 값을 무한히 검사하는데, 이 방법은 다른 쓰레드가 락을 해제할 때까지 시간을 낭비한다.
 
 ### Test-And-Set
+
+```c
+int TestAndSet(int *old_ptr, int new) {
+  int old = *old_ptr; // fetch old value at old_ptr
+  *old_ptr = new; // store ’new’ into old_ptr
+  return old; // return the old value
+}
+```
